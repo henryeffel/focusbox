@@ -1,9 +1,19 @@
 {
   "manifest_version": 3,
   "name": "FocusBox",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "ADHD-friendly time boxing and interstitial journaling for Chrome.",
-  "permissions": ["storage", "alarms", "tabs"],
+  "permissions": ["storage", "alarms", "tabs", "webNavigation"],
+  "host_permissions": [
+    "*://youtube.com/*",
+    "*://www.youtube.com/*",
+    "*://instagram.com/*",
+    "*://www.instagram.com/*",
+    "*://x.com/*",
+    "*://twitter.com/*",
+    "*://www.facebook.com/*",
+    "*://reddit.com/*"
+  ],
   "background": {
     "service_worker": "background.js",
     "type": "module"

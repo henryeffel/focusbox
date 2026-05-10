@@ -268,6 +268,7 @@ function formatLog(log) {
     next: { icon: "➡️", label: "다음 행동" },
     stop: { icon: "⏹️", label: "중단" },
     interrupted: { icon: "⏹️", label: "중단" },
+    distraction: { icon: "!", label: "방해 사이트" },
     ritual_skipped: { icon: "↪️", label: "시작 건너뜀" }
   };
   const meta = labels[log.type] || { icon: "•", label: log.type };

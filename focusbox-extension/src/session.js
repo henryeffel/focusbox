@@ -59,6 +59,29 @@ export async function addBrainDump(message) {
   return nextSession;
 }
 
+export async function recordDistraction({ url, host }) {
+  const { currentSession, sessions } = await getState();
+  if (!currentSession) return null;
+
+  const log = {
+    time: new Date().toISOString(),
+    type: "distraction",
+    message: host || url,
+    url
+  };
+  const nextSession = {
+    ...currentSession,
+    logs: [...(currentSession.logs || []), log]
+  };
+
+  await setState({
+    currentSession: nextSession,
+    sessions: sessions.map((session) => (session.id === nextSession.id ? nextSession : session))
+  });
+  await appendDailyLog({ ...log, sessionId: nextSession.id });
+  return nextSession;
+}
+
 export async function completeSession({ result, nextStep }) {
   const { currentSession, sessions } = await getState();
   if (!currentSession) return null;
