@@ -60,8 +60,8 @@ async function renderTodayLogs() {
   app.innerHTML = `
     ${
       logs.length
-        ? logs.map((log) => `<div class="log">${formatLog(log)}</div>`).join("")
-        : `<div class="empty">오늘 기록이 아직 없습니다.</div>`
+        ? logs.map((log) => `<article class="log">${formatLog(log)}</article>`).join("")
+        : `<div class="empty">아직 기록이 없습니다. 작은 FocusBox 하나부터 시작해보세요.</div>`
     }
     <div class="actions">
       <button class="secondary" id="backButton" type="button">돌아가기</button>
@@ -78,14 +78,22 @@ async function openStartPage() {
 
 function formatLog(log) {
   const labels = {
-    start: "시작",
-    brain_dump: "Brain Dump",
-    complete: "완료",
-    interrupted: "중단",
-    ritual_skipped: "Start Ritual skipped",
-    next: "Next"
+    start: { icon: "▶️", label: "시작" },
+    brain_dump: { icon: "💭", label: "생각 보관" },
+    complete: { icon: "✅", label: "완료" },
+    next: { icon: "➡️", label: "다음 행동" },
+    stop: { icon: "⏹️", label: "중단" },
+    interrupted: { icon: "⏹️", label: "중단" },
+    ritual_skipped: { icon: "↪️", label: "시작 건너뜀" }
   };
-  return `${formatTime(log.time)} ${labels[log.type] || log.type} - ${escapeHtml(log.message)}`;
+  const meta = labels[log.type] || { icon: "•", label: log.type };
+  return `
+    <div class="log-meta">
+      <time>${formatTime(log.time)}</time>
+      <span class="log-type">${meta.icon} ${escapeHtml(meta.label)}</span>
+    </div>
+    <div class="log-message">${escapeHtml(log.message)}</div>
+  `;
 }
 
 function escapeHtml(value) {

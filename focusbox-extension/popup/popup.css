@@ -98,13 +98,49 @@ button {
 }
 
 .empty {
-  padding: 22px 0;
+  padding: 24px 12px;
+  border: 1px dashed #e0d6c6;
+  border-radius: 8px;
+  background: #fffaf2;
   color: var(--muted);
   text-align: center;
+  line-height: 1.5;
 }
 
 .log {
-  padding: 9px 0;
-  border-bottom: 1px solid var(--line);
+  padding: 11px;
+  border: 1px solid #e6dccb;
+  border-radius: 8px;
+  background: #fffaf2;
   font-size: 13px;
+}
+
+.log + .log {
+  margin-top: 8px;
+}
+
+.log-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.log-type {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  border: 1px solid #eadfcf;
+  border-radius: 999px;
+  padding: 2px 8px;
+  background: #fff;
+  color: #364152;
+}
+
+.log-message {
+  line-height: 1.45;
+  overflow-wrap: anywhere;
 }
