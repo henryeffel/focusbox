@@ -680,3 +680,54 @@ React나 TypeScript는 쓰지 말고, 순수 HTML/CSS/JavaScript로 만들어줘
 
 처음부터 방해 사이트 차단, 탭 감지, AI 요약까지 시키면 산으로 갑니다.
 **v0.1은 “크롬 켜기 → 하나 정하기 → 타이머 → 딴생각 저장 → 완료 로그”까지만** 가는 게 맞습니다.
+
+---
+
+## v0.1 MVP 구현 및 실행 방법
+
+이 저장소에는 README 명세를 기준으로 만든 Manifest V3 Chrome Extension MVP가 추가되어 있습니다.
+
+```txt
+focusbox-extension/
+├── manifest.json
+├── background.js
+├── popup/
+├── pages/
+├── options/
+├── src/
+├── assets/
+└── README.md
+```
+
+### 구현된 기능
+
+- Start Ritual
+- Focus Session 타이머
+- Brain Dump 저장
+- 완료/중단 로그
+- 오늘 기록
+- Chrome Storage API 기반 세션/로그 저장
+- Manifest V3 service worker 구조
+
+아직 구현하지 않은 기능:
+
+- 방해 사이트 차단
+- 탭 감지
+- AI 요약
+
+### Chrome에서 실행하기
+
+1. Chrome에서 `chrome://extensions`를 엽니다.
+2. 오른쪽 위 `개발자 모드`를 켭니다.
+3. `압축해제된 확장 프로그램을 로드합니다`를 클릭합니다.
+4. `focusbox-extension/` 폴더를 선택합니다.
+
+### 테스트 방법
+
+1. 확장 설치 직후 FocusBox 시작 화면이 열리는지 확인합니다.
+2. 새 탭을 열어 Start Ritual 화면이 표시되는지 확인합니다.
+3. 작업명과 첫 행동을 입력하고 10분/25분/50분 중 하나로 세션을 시작합니다.
+4. 확장 아이콘 popup에서 진행 중인 세션과 남은 시간이 유지되는지 확인합니다.
+5. 진행 화면에서 Brain Dump를 저장하고 오늘 기록에 남는지 확인합니다.
+6. 완료 또는 중단을 저장하고 오늘 기록에 로그가 추가되는지 확인합니다.
+7. popup을 닫거나 페이지를 새로고침해도 `chrome.storage.local`에 저장된 세션이 복원되는지 확인합니다.
