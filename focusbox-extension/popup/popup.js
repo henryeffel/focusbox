@@ -19,11 +19,11 @@ async function init() {
 function renderSession(session) {
   statusText.textContent = "지금 집중 중인 박스가 있습니다.";
   app.innerHTML = `
+    <div class="timer" id="timer">${formatRemaining(session.endsAt)}</div>
     <div class="summary">
       <div class="item"><span>현재 작업</span>${escapeHtml(session.task)}</div>
       <div class="item"><span>첫 행동</span>${escapeHtml(session.nextAction)}</div>
     </div>
-    <div class="timer" id="timer">${formatRemaining(session.endsAt)}</div>
     <div class="actions">
       <button id="openButton" type="button">진행 화면 열기</button>
       <button class="secondary" id="todayButton" type="button">오늘 기록 보기</button>
@@ -78,20 +78,20 @@ async function openStartPage() {
 
 function formatLog(log) {
   const labels = {
-    start: { icon: "Start", label: "시작" },
-    brain_dump: { icon: "Note", label: "생각 맡김" },
-    complete: { icon: "Done", label: "완료" },
-    next: { icon: "Next", label: "다음 행동" },
-    stop: { icon: "Stop", label: "중단" },
-    interrupted: { icon: "Stop", label: "중단" },
-    distraction: { icon: "Drift", label: "방해 사이트" },
-    ritual_skipped: { icon: "Skip", label: "첫 박스 건너뜀" }
+    start: { label: "시작" },
+    brain_dump: { label: "생각 맡김" },
+    complete: { label: "완료" },
+    next: { label: "다음 행동" },
+    stop: { label: "중단" },
+    interrupted: { label: "중단" },
+    distraction: { label: "방해 사이트" },
+    ritual_skipped: { label: "첫 박스 건너뜀" }
   };
-  const meta = labels[log.type] || { icon: "Log", label: log.type };
+  const meta = labels[log.type] || { label: log.type };
   return `
     <div class="log-meta">
       <time>${formatTime(log.time)}</time>
-      <span class="log-type">${meta.icon} · ${escapeHtml(meta.label)}</span>
+      <span class="log-type">${escapeHtml(meta.label)}</span>
     </div>
     <div class="log-message">${escapeHtml(log.message)}</div>
   `;

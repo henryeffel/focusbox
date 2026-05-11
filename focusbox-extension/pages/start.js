@@ -36,14 +36,15 @@ function setView(title) {
 function renderStart() {
   setView("지금은 하나만 정하면 됩니다.");
   app.innerHTML = `
-    <div class="view-heading">
+    <div class="view-heading hero-heading">
       <p class="eyebrow">오늘의 첫 박스</p>
       <h2>브라우저를 켠 이유를 잃어버리기 전에, 첫 작업 하나만 정해보세요.</h2>
+      <p>완벽한 계획보다 지금 바로 시작할 수 있는 한 줄이면 충분합니다.</p>
     </div>
     <form id="startForm" novalidate>
       <div class="field">
-        <label for="task">지금 하려는 일</label>
-        <input id="task" name="task" autocomplete="off" placeholder="예: 확장 프로그램 README 정리">
+        <label for="task">지금 할 작업</label>
+        <input id="task" name="task" autocomplete="off" placeholder="예: FocusBox README 정리">
       </div>
       <div class="field">
         <label for="nextAction">가장 작은 첫 행동</label>
@@ -91,7 +92,7 @@ function renderIdle() {
     <div class="view-heading">
       <p class="eyebrow">오늘의 첫 박스</p>
       <h2>오늘은 시작 준비가 끝났습니다.</h2>
-      <p>진행 중인 세션은 없습니다. 필요하면 새 박스를 바로 시작할 수 있어요.</p>
+      <p>진행 중인 박스가 없다면 새 박스를 바로 시작할 수 있습니다.</p>
     </div>
     <div class="action-row">
       <button id="newSessionButton" type="button">새 박스 시작하기</button>
@@ -140,13 +141,13 @@ function renderBrainDump() {
   app.innerHTML = `
     <div class="view-heading">
       <p class="eyebrow">Quick Capture</p>
-      <h2>지금 하지 않을 생각을 한 줄로 맡겨두세요.</h2>
-      <p>기록한 뒤에는 바로 현재 작업으로 돌아갑니다.</p>
+      <h2>지금 붙잡지 않아도 되는 생각을 한 줄로 남겨두세요.</h2>
+      <p>기록하면 바로 현재 작업으로 돌아갑니다.</p>
     </div>
     <form id="brainDumpForm">
       <div class="field">
         <label for="brainDump">맡겨둘 생각</label>
-        <textarea id="brainDump" name="brainDump" placeholder="예: GitHub README 이미지 첨부법 찾아보기"></textarea>
+        <textarea id="brainDump" name="brainDump" placeholder="예: 나중에 GitHub README 이미지 확인하기"></textarea>
       </div>
       <div class="action-row">
         <button type="submit">저장하고 돌아가기</button>
@@ -179,7 +180,7 @@ function renderComplete() {
   app.innerHTML = `
     <div class="view-heading">
       <p class="eyebrow">완료 기록</p>
-      <h2>이번 박스에서 한 일을 짧게 남겨주세요.</h2>
+      <h2>이번 박스에서 끝낸 일을 짧게 남겨주세요.</h2>
     </div>
     <form id="completeForm">
       <div class="field">
@@ -215,8 +216,8 @@ function renderInterrupt() {
   app.innerHTML = `
     <div class="view-heading">
       <p class="eyebrow">중단 기록</p>
-      <h2>FocusBox를 중단할까요?</h2>
-      <p>이유만 남기고 오늘 기록으로 이동합니다.</p>
+      <h2>이 박스를 여기서 멈출까요?</h2>
+      <p>가장 가까운 이유만 고르면 오늘 기록에 남깁니다.</p>
     </div>
     <div class="label">이유</div>
     <div class="reason-grid">
@@ -289,20 +290,20 @@ async function renderTodayLogs() {
 
 function formatLog(log) {
   const labels = {
-    start: { icon: "Start", label: "시작" },
-    brain_dump: { icon: "Note", label: "생각 맡김" },
-    complete: { icon: "Done", label: "완료" },
-    next: { icon: "Next", label: "다음 행동" },
-    stop: { icon: "Stop", label: "중단" },
-    interrupted: { icon: "Stop", label: "중단" },
-    distraction: { icon: "Drift", label: "방해 사이트" },
-    ritual_skipped: { icon: "Skip", label: "첫 박스 건너뜀" }
+    start: { label: "시작" },
+    brain_dump: { label: "생각 맡김" },
+    complete: { label: "완료" },
+    next: { label: "다음 행동" },
+    stop: { label: "중단" },
+    interrupted: { label: "중단" },
+    distraction: { label: "방해 사이트" },
+    ritual_skipped: { label: "첫 박스 건너뜀" }
   };
-  const meta = labels[log.type] || { icon: "Log", label: log.type };
+  const meta = labels[log.type] || { label: log.type };
   return `
     <div class="log-meta">
       <time>${formatTime(log.time)}</time>
-      <span class="log-type">${meta.icon} · ${escapeHtml(meta.label)}</span>
+      <span class="log-type">${escapeHtml(meta.label)}</span>
     </div>
     <div class="log-message">${escapeHtml(log.message)}</div>
   `;

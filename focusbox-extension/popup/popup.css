@@ -1,13 +1,14 @@
 :root {
   color-scheme: dark;
   --bg: #131312;
-  --panel: #1a1b19;
-  --panel-soft: #20221f;
+  --surface: #191a18;
+  --surface-2: #20221f;
   --ink: #f0f1eb;
   --muted: #b3b3b3;
-  --line: #323630;
+  --line: #343833;
+  --line-strong: #4a5048;
   --accent: #74927f;
-  --accent-strong: #8aad99;
+  --accent-strong: #8cad9a;
   --danger: #a80506;
 }
 
@@ -25,7 +26,7 @@ body {
 
 main {
   padding: 18px;
-  background: linear-gradient(180deg, #1a1b19, #131312);
+  background: linear-gradient(180deg, #20221f, #131312);
 }
 
 h1,
@@ -57,7 +58,7 @@ header {
   padding: 11px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: var(--panel-soft);
+  background: var(--surface-2);
 }
 
 .item span {
@@ -69,9 +70,13 @@ header {
 }
 
 .timer {
-  margin: 15px 0;
+  margin: 2px 0 15px;
+  padding: 16px;
+  border: 1px solid rgb(116 146 127 / 34%);
+  border-radius: 8px;
+  background: rgb(66 88 48 / 24%);
   color: #f4f7f2;
-  font-size: 38px;
+  font-size: 42px;
   font-weight: 900;
   line-height: 1;
   letter-spacing: 0;
@@ -100,13 +105,13 @@ button:hover {
 }
 
 .secondary {
-  border-color: var(--line);
+  border-color: var(--line-strong);
   background: #232622;
   color: var(--ink);
 }
 
 .secondary:hover {
-  background: #2b3029;
+  background: #2c312a;
 }
 
 .danger {
@@ -128,7 +133,7 @@ button:hover {
   padding: 12px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: var(--panel-soft);
+  background: var(--surface-2);
   font-size: 13px;
 }
 

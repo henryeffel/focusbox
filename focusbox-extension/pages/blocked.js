@@ -22,8 +22,8 @@ async function init() {
 function renderBlocked(session) {
   app.innerHTML = `
     <p class="eyebrow">잠깐 멈춤</p>
-    <h1>지금은 FocusBox가 방해 사이트를 막고 있습니다.</h1>
-    <p class="lede">먼저 정한 작업으로 돌아가거나, 떠오른 생각만 맡겨두고 돌아갈 수 있어요.</p>
+    <h1>지금은 이 사이트보다 현재 박스가 먼저입니다.</h1>
+    <p class="lede">정해둔 작업으로 돌아가거나, 떠오른 생각만 맡겨두고 다시 이어갈 수 있습니다.</p>
     <div class="target">${escapeHtml(formatTarget(targetUrl))}</div>
 
     <div class="summary">
@@ -39,7 +39,7 @@ function renderBlocked(session) {
 
     <form class="capture" id="captureForm" hidden>
       <label for="thought">맡겨둘 생각</label>
-      <input id="thought" name="thought" autocomplete="off" placeholder="나중에 확인할 일을 한 줄로 적어주세요">
+      <input id="thought" name="thought" autocomplete="off" placeholder="나중에 확인할 일을 한 줄로 적어주세요.">
       <div class="actions">
         <button type="submit">저장하고 돌아가기</button>
         <button class="secondary" id="cancelCaptureButton" type="button">취소</button>
