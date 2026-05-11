@@ -25,6 +25,6 @@ export const DEFAULT_DISTRACTION_SITES = [
   "reddit.com"
 ];
 
-export const SKIP_REASONS = ["급한 검색만 필요", "쉬는 날", "컨디션 낮음", "나중에"];
+export const SKIP_REASONS = ["급한 확인만 필요", "쉬는 날", "컨디션 낮음", "나중에 시작"];
 
 export const INTERRUPT_REASONS = ["급한 일", "집중 어려움", "작업 변경", "기타"];

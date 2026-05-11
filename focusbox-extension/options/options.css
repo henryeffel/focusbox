@@ -1,7 +1,18 @@
+:root {
+  color-scheme: dark;
+  --bg: #131312;
+  --panel: #1a1b19;
+  --ink: #f0f1eb;
+  --muted: #b3b3b3;
+  --line: #323630;
+  --accent: #74927f;
+  --accent-strong: #8aad99;
+}
+
 body {
   margin: 0;
-  background: #f7f8f5;
-  color: #172033;
+  background: var(--bg);
+  color: var(--ink);
   font-family: Arial, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 }
 
@@ -13,9 +24,9 @@ main {
 
 section {
   padding: 24px;
-  border: 1px solid #d8dfd5;
+  border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fff;
+  background: var(--panel);
 }
 
 h1,
@@ -24,14 +35,23 @@ p {
   margin-top: 0;
 }
 
+p {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
 button {
   min-height: 42px;
   border: 0;
-  border-radius: 6px;
+  border-radius: 8px;
   padding: 9px 14px;
   cursor: pointer;
-  background: #2563eb;
-  color: #fff;
+  background: var(--accent);
+  color: #07100b;
   font: inherit;
-  font-weight: 700;
+  font-weight: 800;
+}
+
+button:hover {
+  background: var(--accent-strong);
 }

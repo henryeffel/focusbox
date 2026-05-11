@@ -17,10 +17,10 @@ async function init() {
 }
 
 function renderSession(session) {
-  statusText.textContent = "진행 중인 작업이 있습니다.";
+  statusText.textContent = "지금 집중 중인 박스가 있습니다.";
   app.innerHTML = `
     <div class="summary">
-      <div class="item"><span>작업</span>${escapeHtml(session.task)}</div>
+      <div class="item"><span>현재 작업</span>${escapeHtml(session.task)}</div>
       <div class="item"><span>첫 행동</span>${escapeHtml(session.nextAction)}</div>
     </div>
     <div class="timer" id="timer">${formatRemaining(session.endsAt)}</div>
@@ -40,11 +40,11 @@ function renderSession(session) {
 }
 
 function renderEmpty() {
-  statusText.textContent = "아직 진행 중인 작업이 없습니다.";
+  statusText.textContent = "진행 중인 박스가 없습니다.";
   app.innerHTML = `
-    <div class="empty">현재 세션이 없습니다.</div>
+    <div class="empty">지금은 열린 세션이 없습니다.</div>
     <div class="actions">
-      <button id="startButton" type="button">FocusBox 시작하기</button>
+      <button id="startButton" type="button">첫 박스 시작하기</button>
       <button class="secondary" id="todayButton" type="button">오늘 기록 보기</button>
     </div>
   `;
@@ -61,7 +61,7 @@ async function renderTodayLogs() {
     ${
       logs.length
         ? logs.map((log) => `<article class="log">${formatLog(log)}</article>`).join("")
-        : `<div class="empty">아직 기록이 없습니다. 작은 FocusBox 하나부터 시작해보세요.</div>`
+        : `<div class="empty">아직 기록이 없습니다. 작은 박스 하나부터 시작해보세요.</div>`
     }
     <div class="actions">
       <button class="secondary" id="backButton" type="button">돌아가기</button>
@@ -78,20 +78,20 @@ async function openStartPage() {
 
 function formatLog(log) {
   const labels = {
-    start: { icon: "▶️", label: "시작" },
-    brain_dump: { icon: "💭", label: "생각 보관" },
-    complete: { icon: "✅", label: "완료" },
-    next: { icon: "➡️", label: "다음 행동" },
-    stop: { icon: "⏹️", label: "중단" },
-    interrupted: { icon: "⏹️", label: "중단" },
-    distraction: { icon: "!", label: "방해 사이트" },
-    ritual_skipped: { icon: "↪️", label: "시작 건너뜀" }
+    start: { icon: "Start", label: "시작" },
+    brain_dump: { icon: "Note", label: "생각 맡김" },
+    complete: { icon: "Done", label: "완료" },
+    next: { icon: "Next", label: "다음 행동" },
+    stop: { icon: "Stop", label: "중단" },
+    interrupted: { icon: "Stop", label: "중단" },
+    distraction: { icon: "Drift", label: "방해 사이트" },
+    ritual_skipped: { icon: "Skip", label: "첫 박스 건너뜀" }
   };
-  const meta = labels[log.type] || { icon: "•", label: log.type };
+  const meta = labels[log.type] || { icon: "Log", label: log.type };
   return `
     <div class="log-meta">
       <time>${formatTime(log.time)}</time>
-      <span class="log-type">${meta.icon} ${escapeHtml(meta.label)}</span>
+      <span class="log-type">${meta.icon} · ${escapeHtml(meta.label)}</span>
     </div>
     <div class="log-message">${escapeHtml(log.message)}</div>
   `;

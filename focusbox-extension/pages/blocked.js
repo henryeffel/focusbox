@@ -21,27 +21,28 @@ async function init() {
 
 function renderBlocked(session) {
   app.innerHTML = `
-    <h1>FocusBox blocked a distraction site</h1>
-    <p class="lede">This site is paused while your Focus Session is running.</p>
+    <p class="eyebrow">잠깐 멈춤</p>
+    <h1>지금은 FocusBox가 방해 사이트를 막고 있습니다.</h1>
+    <p class="lede">먼저 정한 작업으로 돌아가거나, 떠오른 생각만 맡겨두고 돌아갈 수 있어요.</p>
     <div class="target">${escapeHtml(formatTarget(targetUrl))}</div>
 
     <div class="summary">
-      <div class="summary-item"><span>Current task</span>${escapeHtml(session.task)}</div>
-      <div class="summary-item"><span>First action</span>${escapeHtml(session.nextAction)}</div>
+      <div class="summary-item"><span>현재 작업</span>${escapeHtml(session.task)}</div>
+      <div class="summary-item"><span>첫 행동</span>${escapeHtml(session.nextAction)}</div>
     </div>
 
     <div class="actions">
-      <button id="returnButton" type="button">Return to task</button>
-      <button class="secondary" id="captureButton" type="button">Save to thought parking</button>
-      <button class="danger" id="continueButton" type="button">Record drift and continue</button>
+      <button id="returnButton" type="button">작업으로 돌아가기</button>
+      <button class="secondary" id="captureButton" type="button">생각 맡기기</button>
+      <button class="danger" id="continueButton" type="button">기록하고 계속 이동</button>
     </div>
 
     <form class="capture" id="captureForm" hidden>
-      <label for="thought">One line to park</label>
-      <input id="thought" name="thought" autocomplete="off" placeholder="What do you want to remember?">
+      <label for="thought">맡겨둘 생각</label>
+      <input id="thought" name="thought" autocomplete="off" placeholder="나중에 확인할 일을 한 줄로 적어주세요">
       <div class="actions">
-        <button type="submit">Save and return</button>
-        <button class="secondary" id="cancelCaptureButton" type="button">Cancel</button>
+        <button type="submit">저장하고 돌아가기</button>
+        <button class="secondary" id="cancelCaptureButton" type="button">취소</button>
       </div>
       <p class="error" id="error"></p>
     </form>
@@ -69,7 +70,7 @@ async function saveThought(event) {
   event.preventDefault();
   const thought = app.querySelector("#thought").value.trim();
   if (!thought) {
-    app.querySelector("#error").textContent = "Enter one line before saving.";
+    app.querySelector("#error").textContent = "저장할 내용을 한 줄로 입력해주세요.";
     return;
   }
 
@@ -84,7 +85,7 @@ async function continueToTarget() {
   });
 
   if (!response?.ok) {
-    app.querySelector("#error").textContent = "Could not continue to the site.";
+    app.querySelector("#error").textContent = "사이트로 이동하지 못했습니다.";
   }
 }
 
@@ -104,7 +105,7 @@ function formatTarget(url) {
   try {
     return new URL(url).hostname;
   } catch {
-    return url || "Unknown site";
+    return url || "알 수 없는 사이트";
   }
 }
 
