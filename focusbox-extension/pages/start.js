@@ -113,7 +113,23 @@ function renderSession(session) {
         <h2>${escapeHtml(session.task)}</h2>
         <p>다음 행동: ${escapeHtml(session.nextAction)}</p>
       </div>
-      <div class="timer" id="timer">${formatRemaining(session.endsAt)}</div>
+      <div class="session-side">
+        <div class="timer" id="timer">${formatRemaining(session.endsAt)}</div>
+        <div class="sleeping-pet" aria-hidden="true">
+          <span class="pet-zzz z-one">Z</span>
+          <span class="pet-zzz z-two">z</span>
+          <div class="pet-body">
+            <span class="pet-ear pet-ear-left"></span>
+            <span class="pet-ear pet-ear-right"></span>
+            <span class="pet-face">
+              <span class="pet-eye pet-eye-left"></span>
+              <span class="pet-eye pet-eye-right"></span>
+              <span class="pet-nose"></span>
+            </span>
+            <span class="pet-tail"></span>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="summary">
       <div class="summary-item"><span>현재 작업</span>${escapeHtml(session.task)}</div>

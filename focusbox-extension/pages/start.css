@@ -244,6 +244,12 @@ button:hover {
   background: linear-gradient(135deg, rgb(66 88 48 / 35%), rgb(32 34 31 / 88%));
 }
 
+.session-side {
+  display: grid;
+  justify-items: end;
+  gap: 12px;
+}
+
 .timer {
   min-width: 180px;
   color: #f4f7f2;
@@ -252,6 +258,142 @@ button:hover {
   line-height: 1;
   text-align: right;
   letter-spacing: 0;
+}
+
+.sleeping-pet {
+  position: relative;
+  width: 118px;
+  height: 58px;
+  opacity: 0.86;
+}
+
+.pet-body {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 92px;
+  height: 42px;
+  border: 1px solid rgb(116 146 127 / 42%);
+  border-radius: 24px 26px 20px 22px;
+  background: linear-gradient(180deg, #2d332d, #20251f);
+  box-shadow: inset 0 -8px 14px rgb(19 19 18 / 24%);
+  animation: pet-breathe 4.8s ease-in-out infinite;
+  transform-origin: 62% 80%;
+}
+
+.pet-ear {
+  position: absolute;
+  top: -8px;
+  width: 17px;
+  height: 17px;
+  border: 1px solid rgb(116 146 127 / 38%);
+  background: #252b25;
+  transform: rotate(45deg);
+}
+
+.pet-ear-left {
+  left: 20px;
+  border-radius: 4px 0 4px 0;
+}
+
+.pet-ear-right {
+  left: 46px;
+  border-radius: 4px 0 4px 0;
+}
+
+.pet-face {
+  position: absolute;
+  left: 20px;
+  top: 14px;
+  width: 38px;
+  height: 16px;
+}
+
+.pet-eye {
+  position: absolute;
+  top: 2px;
+  width: 9px;
+  height: 5px;
+  border-bottom: 2px solid #8cad9a;
+  border-radius: 0 0 9px 9px;
+}
+
+.pet-eye-left {
+  left: 3px;
+}
+
+.pet-eye-right {
+  left: 23px;
+}
+
+.pet-nose {
+  position: absolute;
+  left: 17px;
+  top: 9px;
+  width: 4px;
+  height: 3px;
+  border-radius: 50%;
+  background: #74927f;
+}
+
+.pet-tail {
+  position: absolute;
+  right: -9px;
+  bottom: 9px;
+  width: 24px;
+  height: 14px;
+  border: 5px solid #2f372f;
+  border-left: 0;
+  border-radius: 0 16px 16px 0;
+}
+
+.pet-zzz {
+  position: absolute;
+  color: #b3b3b3;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+  opacity: 0;
+  animation: pet-zzz 5.6s ease-in-out infinite;
+}
+
+.z-one {
+  right: 22px;
+  top: 4px;
+}
+
+.z-two {
+  right: 8px;
+  top: -4px;
+  animation-delay: 1.4s;
+}
+
+@keyframes pet-breathe {
+  0%,
+  100% {
+    transform: scaleY(1) translateY(0);
+  }
+
+  50% {
+    transform: scaleY(1.045) translateY(-1px);
+  }
+}
+
+@keyframes pet-zzz {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.92);
+  }
+
+  35% {
+    opacity: 0.55;
+  }
+
+  70% {
+    opacity: 0;
+    transform: translateY(-8px) scale(1);
+  }
 }
 
 .summary {
@@ -346,5 +488,13 @@ button:hover {
     min-width: 0;
     font-size: 48px;
     text-align: left;
+  }
+
+  .session-side {
+    justify-items: start;
+  }
+
+  .sleeping-pet {
+    width: 108px;
   }
 }
