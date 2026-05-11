@@ -1,15 +1,16 @@
 :root {
   color-scheme: dark;
-  --bg: #131312;
-  --surface: #191a18;
-  --surface-2: #20221f;
-  --ink: #f0f1eb;
+  --background: #131312;
+  --surface: #1c1c1a;
+  --surface-2: #242420;
+  --text: #f4f1e8;
   --muted: #b3b3b3;
-  --line: #343833;
-  --line-strong: #4a5048;
-  --accent: #74927f;
-  --accent-strong: #8cad9a;
+  --primary: #74927f;
+  --primary-dark: #425830;
   --danger: #a80506;
+  --border: rgba(179, 179, 179, 0.16);
+  --card-radius: 24px;
+  --button-radius: 999px;
 }
 
 * {
@@ -19,14 +20,18 @@
 body {
   width: 360px;
   margin: 0;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: Arial, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  background: var(--background);
+  color: var(--text);
+  font-family: "Segoe UI Variable", "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 main {
   padding: 18px;
-  background: linear-gradient(180deg, #20221f, #131312);
+  background:
+    radial-gradient(circle at 70% -10%, rgb(116 146 127 / 16%), transparent 13rem),
+    linear-gradient(180deg, #1c1c1a, var(--background));
 }
 
 h1,
@@ -36,6 +41,8 @@ p {
 
 h1 {
   font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
 }
 
 header {
@@ -55,9 +62,9 @@ header {
 }
 
 .item {
-  padding: 11px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  padding: 13px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
   background: var(--surface-2);
 }
 
@@ -66,20 +73,23 @@ header {
   margin-bottom: 5px;
   color: var(--muted);
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .timer {
-  margin: 2px 0 15px;
-  padding: 16px;
-  border: 1px solid rgb(116 146 127 / 34%);
-  border-radius: 8px;
-  background: rgb(66 88 48 / 24%);
-  color: #f4f7f2;
-  font-size: 42px;
+  margin: 2px 0 14px;
+  padding: 18px;
+  border: 1px solid rgb(116 146 127 / 30%);
+  border-radius: var(--card-radius);
+  background:
+    radial-gradient(circle at 82% 18%, rgb(116 146 127 / 20%), transparent 7rem),
+    rgb(66 88 48 / 24%);
+  color: var(--text);
+  font-family: "Arial Rounded MT Bold", "Segoe UI Variable", "Pretendard", system-ui, sans-serif;
+  font-size: 48px;
   font-weight: 900;
-  line-height: 1;
-  letter-spacing: 0;
+  line-height: 0.94;
+  letter-spacing: -0.03em;
 }
 
 .actions {
@@ -89,50 +99,51 @@ header {
 }
 
 button {
-  min-height: 40px;
+  min-height: 42px;
   border: 1px solid transparent;
-  border-radius: 8px;
-  padding: 8px 10px;
+  border-radius: var(--button-radius);
+  padding: 9px 12px;
   cursor: pointer;
-  background: var(--accent);
-  color: #07100b;
+  background: var(--primary);
+  color: #10150f;
   font: inherit;
-  font-weight: 800;
+  font-weight: 750;
 }
 
 button:hover {
-  background: var(--accent-strong);
+  background: #86a391;
 }
 
 .secondary {
-  border-color: var(--line-strong);
-  background: #232622;
-  color: var(--ink);
+  border-color: var(--border);
+  background: rgb(255 255 255 / 4%);
+  color: var(--text);
 }
 
 .secondary:hover {
-  background: #2c312a;
+  background: rgb(255 255 255 / 7%);
 }
 
 .danger {
-  background: var(--danger);
-  color: #fff;
+  border-color: rgb(168 5 6 / 28%);
+  background: rgb(168 5 6 / 14%);
+  color: #ffd8d8;
 }
 
 .empty {
-  padding: 24px 12px;
-  border: 1px dashed #595959;
-  border-radius: 8px;
-  background: #171916;
+  padding: 26px 12px;
+  border: 1px dashed var(--border);
+  border-radius: var(--card-radius);
+  background: rgb(255 255 255 / 3%);
   color: var(--muted);
   text-align: center;
   line-height: 1.5;
 }
 
 .log {
-  padding: 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  padding: 13px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
   background: var(--surface-2);
   font-size: 13px;
 }
@@ -146,9 +157,9 @@ button:hover {
   flex-wrap: wrap;
   align-items: center;
   gap: 6px;
-  margin-bottom: 6px;
+  margin-bottom: 7px;
   color: var(--muted);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .log-type {
@@ -156,13 +167,14 @@ button:hover {
   align-items: center;
   min-height: 24px;
   border: 1px solid rgb(116 146 127 / 34%);
-  border-radius: 999px;
+  border-radius: var(--button-radius);
   padding: 2px 8px;
   background: rgb(116 146 127 / 12%);
   color: #d9e5dc;
 }
 
 .log-message {
+  color: var(--text);
   line-height: 1.45;
   overflow-wrap: anywhere;
 }

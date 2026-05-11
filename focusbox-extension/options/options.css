@@ -1,13 +1,14 @@
 :root {
   color-scheme: dark;
-  --bg: #131312;
-  --surface: #191a18;
-  --surface-2: #20221f;
-  --ink: #f0f1eb;
+  --background: #131312;
+  --surface: #1c1c1a;
+  --surface-2: #242420;
+  --text: #f4f1e8;
   --muted: #b3b3b3;
-  --line: #343833;
-  --accent: #74927f;
-  --accent-strong: #8cad9a;
+  --primary: #74927f;
+  --border: rgba(179, 179, 179, 0.16);
+  --card-radius: 26px;
+  --button-radius: 999px;
 }
 
 * {
@@ -16,9 +17,13 @@
 
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: Arial, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  background:
+    radial-gradient(circle at 50% -10%, rgb(116 146 127 / 10%), transparent 30rem),
+    var(--background);
+  color: var(--text);
+  font-family: "Segoe UI Variable", "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 main {
@@ -28,9 +33,9 @@ main {
 }
 
 section {
-  padding: 24px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  padding: 26px;
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
   background: linear-gradient(180deg, var(--surface-2), var(--surface));
   box-shadow: 0 24px 60px rgb(0 0 0 / 30%);
 }
@@ -41,23 +46,29 @@ p {
   margin-top: 0;
 }
 
+h1,
+h2 {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
 p {
   color: var(--muted);
   line-height: 1.55;
 }
 
 button {
-  min-height: 42px;
+  min-height: 44px;
   border: 0;
-  border-radius: 8px;
-  padding: 9px 14px;
+  border-radius: var(--button-radius);
+  padding: 10px 16px;
   cursor: pointer;
-  background: var(--accent);
-  color: #07100b;
+  background: var(--primary);
+  color: #10150f;
   font: inherit;
-  font-weight: 800;
+  font-weight: 750;
 }
 
 button:hover {
-  background: var(--accent-strong);
+  background: #86a391;
 }

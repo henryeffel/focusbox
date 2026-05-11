@@ -56,7 +56,7 @@ function renderEmpty() {
 async function renderTodayLogs() {
   if (timerId) clearInterval(timerId);
   const logs = await getTodayLogs();
-  statusText.textContent = "오늘의 기록";
+  statusText.textContent = "오늘 남긴 흔적";
   app.innerHTML = `
     ${
       logs.length
@@ -79,19 +79,19 @@ async function openStartPage() {
 function formatLog(log) {
   const labels = {
     start: { label: "시작" },
-    brain_dump: { label: "생각 맡김" },
+    brain_dump: { label: "생각 보관" },
     complete: { label: "완료" },
     next: { label: "다음 행동" },
     stop: { label: "중단" },
     interrupted: { label: "중단" },
-    distraction: { label: "방해 사이트" },
+    distraction: { label: "이탈" },
     ritual_skipped: { label: "첫 박스 건너뜀" }
   };
   const meta = labels[log.type] || { label: log.type };
   return `
     <div class="log-meta">
-      <time>${formatTime(log.time)}</time>
       <span class="log-type">${escapeHtml(meta.label)}</span>
+      <time>${formatTime(log.time)}</time>
     </div>
     <div class="log-message">${escapeHtml(log.message)}</div>
   `;

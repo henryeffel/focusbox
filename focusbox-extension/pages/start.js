@@ -50,7 +50,7 @@ function renderStart() {
         <label for="nextAction">가장 작은 첫 행동</label>
         <input id="nextAction" name="nextAction" autocomplete="off" placeholder="예: README 파일 열기">
       </div>
-      <div class="label">얼마 동안 집중할까요?</div>
+      <div class="label">집중 시간</div>
       <div class="duration-row" id="durationRow">
         ${DURATIONS.map((duration) => `<button class="choice ${duration === selectedDuration ? "active" : ""}" type="button" data-duration="${duration}">${duration}분</button>`).join("")}
       </div>
@@ -108,7 +108,7 @@ function renderSession(session) {
   setView("지금 집중 중인 박스가 있습니다.");
   app.innerHTML = `
     <div class="session-hero">
-      <div>
+      <div class="session-copy">
         <p class="eyebrow">Focus Session</p>
         <h2>${escapeHtml(session.task)}</h2>
         <p>다음 행동: ${escapeHtml(session.nextAction)}</p>
@@ -135,9 +135,9 @@ function renderSession(session) {
       <div class="summary-item"><span>현재 작업</span>${escapeHtml(session.task)}</div>
       <div class="summary-item"><span>첫 행동</span>${escapeHtml(session.nextAction)}</div>
     </div>
-    <div class="action-row">
+    <div class="action-row session-actions">
       <button id="completeButton" type="button">완료</button>
-      <button class="secondary" id="brainDumpButton" type="button">생각 맡기기</button>
+      <button class="secondary" id="brainDumpButton" type="button">생각 보관</button>
       <button class="danger" id="interruptButton" type="button">중단</button>
     </div>
   `;
@@ -153,16 +153,16 @@ function renderSession(session) {
 }
 
 function renderBrainDump() {
-  setView("떠오른 생각은 잠깐 맡기고 돌아옵니다.");
+  setView("떠오른 생각은 잠깐 보관하고 돌아옵니다.");
   app.innerHTML = `
     <div class="view-heading">
-      <p class="eyebrow">Quick Capture</p>
-      <h2>지금 붙잡지 않아도 되는 생각을 한 줄로 남겨두세요.</h2>
-      <p>기록하면 바로 현재 작업으로 돌아갑니다.</p>
+      <p class="eyebrow">생각 보관</p>
+      <h2>지금 붙잡지 않아도 되는 생각을 여기에 맡겨두세요.</h2>
+      <p>저장하면 바로 현재 작업으로 돌아갑니다.</p>
     </div>
     <form id="brainDumpForm">
       <div class="field">
-        <label for="brainDump">맡겨둘 생각</label>
+        <label for="brainDump">보관할 생각</label>
         <textarea id="brainDump" name="brainDump" placeholder="예: 나중에 GitHub README 이미지 확인하기"></textarea>
       </div>
       <div class="action-row">
@@ -177,7 +177,7 @@ function renderBrainDump() {
     event.preventDefault();
     const message = app.querySelector("#brainDump").value.trim();
     if (!message) {
-      app.querySelector("#error").textContent = "맡겨둘 생각을 한 줄로 입력해주세요.";
+      app.querySelector("#error").textContent = "보관할 생각을 한 줄 이상 입력해주세요.";
       return;
     }
     const session = await addBrainDump(message);
@@ -284,12 +284,13 @@ function renderSkip() {
 }
 
 async function renderTodayLogs() {
-  setView("오늘 기록을 확인합니다.");
+  setView("오늘 남긴 흔적을 확인합니다.");
   const logs = await getTodayLogs();
   app.innerHTML = `
     <div class="view-heading">
       <p class="eyebrow">Today Log</p>
-      <h2>오늘의 기록</h2>
+      <h2>오늘 남긴 흔적</h2>
+      <p>시작, 생각 보관, 완료, 중단 기록을 차분히 모아둡니다.</p>
     </div>
     ${
       logs.length
@@ -307,19 +308,19 @@ async function renderTodayLogs() {
 function formatLog(log) {
   const labels = {
     start: { label: "시작" },
-    brain_dump: { label: "생각 맡김" },
+    brain_dump: { label: "생각 보관" },
     complete: { label: "완료" },
     next: { label: "다음 행동" },
     stop: { label: "중단" },
     interrupted: { label: "중단" },
-    distraction: { label: "방해 사이트" },
+    distraction: { label: "이탈" },
     ritual_skipped: { label: "첫 박스 건너뜀" }
   };
   const meta = labels[log.type] || { label: log.type };
   return `
     <div class="log-meta">
-      <time>${formatTime(log.time)}</time>
       <span class="log-type">${escapeHtml(meta.label)}</span>
+      <time>${formatTime(log.time)}</time>
     </div>
     <div class="log-message">${escapeHtml(log.message)}</div>
   `;
