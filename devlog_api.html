@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>FocusBox 개발 일지</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; line-height: 1.6; color: #37352f; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { border-bottom: 1px solid #e3e2e0; padding-bottom: 5px; color: #191919; }
+        h2 { margin-top: 30px; color: #2e2e2e; border-left: 4px solid #2383e2; padding-left: 10px; }
+        h3 { color: #434343; margin-top: 20px; }
+        code { background-color: #f1f1ef; color: #eb5757; padding: 2px 4px; border-radius: 3px; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; font-size: 0.9em; }
+        pre { background: #f7f6f3; padding: 15px; border-radius: 5px; overflow-x: auto; border: 1px solid #e3e2e0; }
+        pre code { background: none; color: #37352f; padding: 0; font-size: 0.85em; }
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 5px; }
+        .blockquote { background: #f1f1ef; border-left: 3px solid #37352f; padding: 10px 15px; margin: 20px 0; border-radius: 0 5px 5px 0; }
+        .success-tag { background: #e1f5fe; color: #0288d1; padding: 2px 6px; border-radius: 3px; font-weight: bold; font-size: 0.85em; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { border: 1px solid #e3e2e0; padding: 8px 12px; text-align: left; }
+        th { background-color: #f7f6f3; }
+    </style>
+</head>
+<body>
+
+    <h1>🚀 FocusBox AI 백엔드 연동 개발 일지</h1>
+    
+    <div class="blockquote">
+        <strong>프로젝트 명:</strong> FocusBox (ADHD 친화형 Time Boxing + Interstitial Journaling Chrome Extension)<br>
+        <strong>현재 단계:</strong> v0.3 (로컬 FastAPI 서버 및 SQLite DB 파이프라인 구축 완료)
+    </div>
+
+    <h2>1. 아키텍처 개요 (End-to-End 수립)</h2>
+    <p>브라우저 로컬 환경에 격리되어 있던 FocusBox의 데이터를 영구 보존하고 향후 AI/ML 기반 분석 기능을 확장하기 위해 풀스택 데이터 파이프라인을 구축함.</p>
+    <ul>
+        <li><strong>Client (Extension):</strong> 크롬 서비스 워커(<code>background.js</code>)에서 로컬 스토리지 데이터를 감지하여 비동기 전송</li>
+        <li><strong>Server (FastAPI):</strong> 유저 및 확장프로그램 요청 대기, 데이터 유효성 검사(Pydantic Schema 매칭), 비동기 처리 제어 및 CORS 허용</li>
+        <li><strong>Database (SQLite):</strong> 파일 기반 로컬 관계형 데이터베이스(RDB)를 연동하여 중복 데이터 배제 및 영구 저장소 확보</li>
+    </ul>
+
+    <h2>2. 백엔드 핵심 소스 코드 (main.py)</h2>
+    <p>FastAPI 미들웨어를 통한 CORS 전면 개방, Pydantic 모델을 통한 크롬 스토리지 원본 스키마(날짜별 객체 배열) 역인덱싱 설계, SQLite 기본 임베디드 쿼리를 적용한 통합 코드.</p>
+    
+    <pre><code>from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import List, Optional
+import sqlite3
+
+app = FastAPI()
+
+# 크롬 확장프로그램과의 교차 출처 리소스 공유(CORS) 허용
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+DB_FILE = "focusbox.db"
+
+def init_db():
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS focus_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            log_date TEXT,
+            log_type TEXT,
+            message TEXT,
+            time TEXT,
+            session_id TEXT,
+            UNIQUE(session_id, time)
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+# 서버 구동 시 RDB 테이블 초기화
+init_db()
+
+# FocusBox 원본 JSON 스키마 역추적 규격 정의
+class DailyGroup(BaseModel):
+    date: str
+    logs: List[dict]
+
+class LogPayload(BaseModel):
+    logs: List[DailyGroup]
+
+@app.post("/api/sync-logs")
+def sync_logs(payload: LogPayload):
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+    saved_count = 0
+
+    for day in payload.logs:
+        for log in day.logs:
+            log_date = day.date
+            log_type = log.get('type') or 'unknown'
+            message = log.get('message') or '내용 없음'
+            time = log.get('time') or ''
+            session_id = log.get('sessionId') or ''
+            
+            try:
+                # 중복 수신 방지를 위한 INSERT OR IGNORE 처리
+                cursor.execute("""
+                    INSERT OR IGNORE INTO focus_logs (log_date, log_type, message, time, session_id)
+                    VALUES (?, ?, ?, ?, ?)
+                """, (log_date, log_type, message, time, session_id))
+                
+                if cursor.rowcount > 0:
+                    saved_count += 1
+            except Exception as e:
+                print(f"❌ 저장 중 에러 발생: {e}")
+
+    conn.commit()
+    conn.close()
+            
+    print(f"💾 신규 데이터 저장 완료: {saved_count}개")
+    return {"status": "success", "new_saved_count": saved_count}
+</code></pre>
+
+    <h2>3. 프론트엔드 통신 인프라 수정 (background.js)</h2>
+    <p>크롬 스토리지 내 <code>dailyLogs</code> 데이터 레이어를 깊은 탐색하여 백엔드로 라우팅하고, 트래픽 트리거 검증을 위해 임시로 새 탭 생성 이벤트를 바인딩함.</p>
+    
+    <pre><code>function syncLogsToFastAPI() {
+  chrome.storage.local.get(['dailyLogs'], function(result) {
+    const logsFromStorage = result.dailyLogs || [];
+    
+    console.log("현재 크롬 스토리지에 쌓인 로그:", logsFromStorage);
+
+    fetch('http://localhost:8000/api/sync-logs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ logs: logsFromStorage })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('★ FastAPI 서버 동기화 성공! 신규 저장 건수:', data.new_saved_count);
+    })
+    .catch(error => {
+      console.error('⚠️ FastAPI 서버 전송 실패:', error);
+    });
+  });
+}
+
+// 개발 및 데이터 검증 단계 임시 트리거 선언
+chrome.tabs.onCreated.addListener(function() {
+  console.log("새 탭 개설 감지 - 동기화 파이프라인 구동");
+  syncLogsToFastAPI();
+});
+</code></pre>
+
+    <h2>4. 트래픽 테스트 및 데이터 레이아웃 검증</h2>
+    <p>클라이언트 서비스 워커의 데이터 파싱 키와 서버 Pydantic Schema 간의 단어 불일치 문제를 디버깅하여 해결함.</p>
+    
+    <h3>수정된 데이터 키 맵핑 테이블</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>초기 가설 (잘못된 키)</th>
+                <th>실제 유저 로그 데이터 구조 (실제 키)</th>
+                <th>비고</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>content</code> / <code>taskName</code></td>
+                <td><strong><code>message</code></strong></td>
+                <td>유저 인풋 텍스트 수집 필드</td>
+            </tr>
+            <tr>
+                <td><code>action</code></td>
+                <td><strong><code>type</code></strong></td>
+                <td>액션 상태값 (brain_dump, start, complete 등)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3><span class="success-tag">성공 로그 결과</span></h3>
+    <pre><code>===== [FocusBox] 총 5일치 데이터를 DB에 저장합니다 =====
+📅 날짜: 2026-06-01 (이날 쌓인 로그: 5개)
+  🚀 [세션시작] 생각박스 api 테스트
+  💭 [생각맡기기] api 저장 잘 되니
+  💭 [생각맡기기] api 테스트 할거에여
+  ✅ [작업완료] 확인해보기 pydamic?
+💾 이번 요청으로 새로 저장된 로그 개수: 5개
+===================================================</code></pre>
+
+    <h2>5. 핵심 성과 및 CS 기본기 학습 요약</h2>
+    <ul>
+        <li><strong>네트워크(Network):</strong> 교차 출처 자원 공유(CORS) 개념을 이해하고, 크롬 확장프로그램이라는 특수 도메인 출처와 로컬 API 서버 간의 HTTP 통신 및 전송 규격을 설정함.</li>
+        <li><strong>디버깅(Debugging):</strong> 눈에 보이지 않는 Extension의 Service Worker 전용 DevTools 백그라운드 로그와 Uvicorn 콘솔 로그를 교차 분석하여 데이터 키값 불일치 문제를 트러블슈팅함.</li>
+        <li><strong>데이터베이스(Database):</strong> <code>UNIQUE(session_id, time)</code> 복합키 제약 조건과 <code>INSERT OR IGNORE</code> 구문을 결합하여, 클라이언트에서 무차별적인 중복 요청이 들어와도 정합성을 깨뜨리지 않는 멱등성(Idempotency) 있는 DB 아키텍처를 실현함.</li>
+    </ul>
+
+</body>
+</html>
