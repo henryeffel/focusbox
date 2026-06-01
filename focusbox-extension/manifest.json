@@ -12,7 +12,8 @@
     "*://x.com/*",
     "*://twitter.com/*",
     "*://www.facebook.com/*",
-    "*://reddit.com/*"
+    "*://reddit.com/*",
+    "http://localhost:8000/*"
   ],
   "background": {
     "service_worker": "background.js",
